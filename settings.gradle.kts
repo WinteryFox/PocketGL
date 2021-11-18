@@ -1,2 +1,1 @@
-rootProject.name = "DiscordGL"
-
+rootProject.name = "PocketGL"

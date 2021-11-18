@@ -1,6 +1,7 @@
 package dev.amyfoxie
 
 import org.joml.Matrix4f
+import org.joml.Vector4f
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL45.*
 import org.lwjgl.stb.STBImageWrite.*
@@ -43,11 +44,12 @@ fun main() {
                 type(ShaderType.FRAGMENT)
             }
 
-            uniform(0, 3 * 16 * Float.SIZE_BYTES)
+            uniform(0, (3 * 16 * Float.SIZE_BYTES).toLong())
+            uniform(1, (4 * Float.SIZE_BYTES).toLong())
         }
 
         val camera = Camera()
-        camera.rotateDegrees(0f, 0f, 0f)
+        camera.rotateDegrees(0f, 0f, 45f)
         program.use {
             program.run {
                 val mvp = BufferUtils.createFloatBuffer(3 * 16)
@@ -55,7 +57,8 @@ fun main() {
                 camera.matrix.get(16, mvp)
                 camera.perspective(window.width.toFloat() / window.height.toFloat()).get(2 * 16, mvp)
 
-                program.writeUniform(0, mvp)
+                program.writeUniform(0, 0, mvp)
+                program.writeUniform(1, 0, Vector4f(1f, 0f, 1f, 1f).get())
 
                 vao.use {
                     vao.run {

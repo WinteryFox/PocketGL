@@ -4,7 +4,7 @@ layout (location = 0) in vec3 position;
 
 layout (location = 1) out vec3 outPosition;
 
-layout (std140, binding = 0) uniform Camera {
+layout (binding = 0) uniform Camera {
     mat4 model;
     mat4 view;
     mat4 projection;
