@@ -14,14 +14,14 @@ fun main() {
         window.clearBuffer()
 
         val vertices = floatArrayOf(
-            1.0f, 1.0f, 0.0f,
-            1.0f, -1.0f, 0.0f,
-            -1.0f, -1.0f, 0.0f,
-            -1.0f, 1.0f, 0.0f
+            1.0f, 1.0f, 0.0f, // 0: top right
+            1.0f, -1.0f, 0.0f, // 1: bottom right
+            -1.0f, -1.0f, 0.0f, // 2: bottom left
+            -1.0f, 1.0f, 0.0f // 3: top left
         )
         val indices = intArrayOf(
-            0, 1, 3,
-            1, 2, 3
+            0, 2, 1,
+            2, 0, 3
         )
 
         val vao = VertexArrayObject()
@@ -46,16 +46,14 @@ fun main() {
             uniform(0, 3 * 16 * Float.SIZE_BYTES)
         }
 
-        val obj = Matrix4f().rotateZ(90.0f).scale(0.2f)
         val camera = Camera()
-        //val camera = Camera(rotation = Quaternionf().rotateZ(toRadians(90.0f)))
+        camera.rotateDegrees(0f, 0f, 0f)
         program.use {
             program.run {
                 val mvp = BufferUtils.createFloatBuffer(3 * 16)
-                //Matrix4f().get(mvp)
-                obj.get(0, mvp)
-                camera.view.get(16, mvp)
-                camera.project(1.0f).get(2 * 16, mvp)
+                Matrix4f().translate(0f, 0f, -1f).get(0, mvp)
+                camera.matrix.get(16, mvp)
+                camera.perspective(window.width.toFloat() / window.height.toFloat()).get(2 * 16, mvp)
 
                 program.writeUniform(0, mvp)
 

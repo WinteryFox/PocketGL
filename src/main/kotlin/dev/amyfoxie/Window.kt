@@ -51,11 +51,14 @@ class Window(
                 glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, null as IntArray?, true)
             }
         }
+
+        glEnable(GL_DEPTH_TEST)
+        glEnable(GL_CULL_FACE)
     }
 
     fun setClearColor(red: Float, green: Float, blue: Float, alpha: Float) = glClearColor(red, green, blue, alpha)
 
-    fun clearBuffer() = glClear(GL_COLOR_BUFFER_BIT)
+    fun clearBuffer() = glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
     fun swapBuffers() = glfwSwapBuffers(window)
 
