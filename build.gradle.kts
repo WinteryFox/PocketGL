@@ -63,6 +63,6 @@ tasks.withType<ShadowJar> {
     manifest {
         archiveClassifier.set("")
         archiveVersion.set("")
-        attributes("Main-Class" to "dev.amyfoxie.DiscordGLKt")
+        attributes("Main-Class" to "dev.amyfoxie.PocketGLKt")
     }
 }

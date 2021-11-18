@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL45.*
 import org.lwjgl.stb.STBImageWrite.*
 import org.lwjgl.system.MemoryUtil.NULL
 
-class DiscordGL
+class PocketGL
 
 fun main() {
     Window(300, 300, true).use { window ->
@@ -35,12 +35,12 @@ fun main() {
 
         val program = shaderProgram {
             shader {
-                source(DiscordGL::class.java.getResource("/default.vert")!!.readText())
+                source(PocketGL::class.java.getResource("/default.vert")!!.readText())
                 type(ShaderType.VERTEX)
             }
 
             shader {
-                source(DiscordGL::class.java.getResource("/default.frag")!!.readText())
+                source(PocketGL::class.java.getResource("/default.frag")!!.readText())
                 type(ShaderType.FRAGMENT)
             }
 
