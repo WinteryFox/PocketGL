@@ -1,5 +1,7 @@
 package dev.amyfoxie
 
+import org.joml.Matrix4f
+import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL45.*
 import org.lwjgl.stb.STBImageWrite.*
 import org.lwjgl.system.MemoryUtil.NULL
@@ -30,22 +32,43 @@ fun main() {
             glEnableVertexAttribArray(0)
         }
 
-        val program =
-            Shader(GL_VERTEX_SHADER, DiscordGL::class.java.getResource("/default.vert")!!.readText()).use { v ->
-                Shader(GL_FRAGMENT_SHADER, DiscordGL::class.java.getResource("/default.frag")!!.readText()).use { f ->
-                    ShaderProgram(listOf(v, f))
-                }
+        val program = shaderProgram {
+            shader {
+                source(DiscordGL::class.java.getResource("/default.vert")!!.readText())
+                type(ShaderType.VERTEX)
             }
 
-        program.run {
-            vao.run {
-                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0)
+            shader {
+                source(DiscordGL::class.java.getResource("/default.frag")!!.readText())
+                type(ShaderType.FRAGMENT)
+            }
+
+            uniform(0, 3 * 16 * Float.SIZE_BYTES)
+        }
+
+        val obj = Matrix4f().rotateZ(90.0f).scale(0.2f)
+        val camera = Camera()
+        //val camera = Camera(rotation = Quaternionf().rotateZ(toRadians(90.0f)))
+        program.use {
+            program.run {
+                val mvp = BufferUtils.createFloatBuffer(3 * 16)
+                //Matrix4f().get(mvp)
+                obj.get(0, mvp)
+                camera.view.get(16, mvp)
+                camera.project(1.0f).get(2 * 16, mvp)
+
+                program.writeUniform(0, mvp)
+
+                vao.use {
+                    vao.run {
+                        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0)
+                    }
+                }
             }
         }
 
-        window.swapBuffers()
-
         val buffer = window.readBuffer()
+        window.swapBuffers()
         stbi_flip_vertically_on_write(true)
         stbi_write_png("test.png", window.width, window.height, window.channels, buffer, window.channels * window.width)
     }

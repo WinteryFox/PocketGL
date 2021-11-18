@@ -46,15 +46,15 @@ dependencies {
     runtimeOnly("org.lwjgl", "lwjgl-opengl", classifier = "natives-linux")
     runtimeOnly("org.lwjgl", "lwjgl-stb", classifier = "natives-linux")
     runtimeOnly("org.slf4j:slf4j-api:1.7.32")
-    runtimeOnly("ch.qos.logback:logback-classic:1.2.6")
-    runtimeOnly("ch.qos.logback:logback-core:1.2.6")
+    runtimeOnly("ch.qos.logback:logback-classic:1.2.7")
+    runtimeOnly("ch.qos.logback:logback-core:1.2.7")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test:1.5.31")
 }
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
+        freeCompilerArgs = listOf("-Xjsr305=strict", "-opt-in=kotlin.RequiresOptIn")
         jvmTarget = "16"
     }
 }

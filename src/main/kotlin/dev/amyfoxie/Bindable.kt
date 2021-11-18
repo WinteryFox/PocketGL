@@ -1,5 +1,11 @@
 package dev.amyfoxie
 
+import org.jetbrains.annotations.Contract
+import kotlin.contracts.CallsInPlace
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
+
 abstract class Bindable {
     var isBound = false
         private set
@@ -24,7 +30,11 @@ abstract class Bindable {
 
     protected abstract fun delegateUnbind()
 
+    @OptIn(ExperimentalContracts::class)
     fun run(func: () -> Unit) {
+        contract {
+            callsInPlace(func, InvocationKind.EXACTLY_ONCE)
+        }
         bind()
         func()
         unbind()
