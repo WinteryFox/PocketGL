@@ -32,13 +32,13 @@ class ShaderProgram(
     }
 
     fun writeUniform(binding: Int, offset: Long, data: FloatBuffer) {
-        val b = uniformBuffers[binding]
-        require(b != null)
+        val buffer = uniformBuffers[binding]
+        require(buffer != null)
         require(offset >= 0)
         require(data.remaining() > 0)
-        require(offset + data.remaining() <= b.size)
+        require(offset + data.remaining() <= buffer.size)
 
-        glBindBuffer(GL_UNIFORM_BUFFER, b.buffer)
+        glBindBuffer(GL_UNIFORM_BUFFER, buffer.buffer)
         glBufferSubData(GL_UNIFORM_BUFFER, offset, data)
         glBindBuffer(GL_UNIFORM_BUFFER, 0)
     }

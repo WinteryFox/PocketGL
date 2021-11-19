@@ -1,14 +1,11 @@
 package dev.amyfoxie
 
-import org.jetbrains.annotations.Contract
-import kotlin.contracts.CallsInPlace
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
 abstract class Bindable {
-    var isBound = false
-        private set
+    private var isBound = false
 
     fun bind() {
         if (isBound)
