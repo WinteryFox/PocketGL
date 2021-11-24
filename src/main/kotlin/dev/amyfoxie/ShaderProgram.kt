@@ -6,7 +6,7 @@ import java.nio.FloatBuffer
 class ShaderProgram(
     shaders: List<Shader>,
     uniforms: Map<Int, Long>
-) : AutoCloseable, Bindable() {
+) : AutoCloseable {
     private val program: Int = glCreateProgram()
     private val uniformBuffers: Map<Int, ShaderBinding>
 
@@ -31,6 +31,8 @@ class ShaderProgram(
             error(glGetProgramInfoLog(program))
     }
 
+    fun bind() = glUseProgram(program)
+
     fun writeUniform(binding: Int, offset: Long, data: FloatBuffer) {
         val buffer = uniformBuffers[binding]
         require(buffer != null)
@@ -43,35 +45,34 @@ class ShaderProgram(
         glBindBuffer(GL_UNIFORM_BUFFER, 0)
     }
 
-    override fun close() {
-        uniformBuffers.keys.forEach { glDeleteBuffers(it) }
-        glDeleteProgram(program)
-    }
-
-    override fun delegateBind() = glUseProgram(program)
-
-    override fun delegateUnbind() = glUseProgram(0)
+    override fun close() = glDeleteProgram(program)
 }
+
+fun shaderProgram(builder: ShaderProgramBuilder.() -> Unit): ShaderProgram =
+    ShaderProgramBuilder().apply(builder).build()
 
 private data class ShaderBinding(
     val size: Long,
     val buffer: Int
 )
 
-fun shaderProgram(func: ShaderProgramBuilder.() -> Unit): ShaderProgram =
-    ShaderProgramBuilder().apply(func).build()
-
 class ShaderProgramBuilder {
-    private val shaders = mutableListOf<Shader>()
+    private lateinit var vertex: Shader
+    private lateinit var fragment: Shader
     private val uniforms = mutableMapOf<Int, Long>()
 
-    fun shader(shader: Shader) = shaders.add(shader)
+    // TODO: Add other shader types
+    fun vertex(shader: ShaderBuilder.() -> Unit) {
+        vertex = ShaderBuilder(ShaderType.VERTEX).apply(shader).build()
+    }
 
-    fun shader(shader: ShaderBuilder.() -> Unit) = shaders.add(ShaderBuilder().apply(shader).build())
+    fun fragment(shader: ShaderBuilder.() -> Unit) {
+        fragment = ShaderBuilder(ShaderType.FRAGMENT).apply(shader).build()
+    }
 
     fun uniform(binding: Int, size: Long) {
         uniforms[binding] = size
     }
 
-    fun build() = ShaderProgram(shaders, uniforms)
+    fun build() = ShaderProgram(listOf(vertex, fragment), uniforms)
 }

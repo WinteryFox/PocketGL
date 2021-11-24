@@ -11,7 +11,7 @@ class PocketGLTest {
             window.setClearColor(1f, 1f, 1f, 1f)
             window.clearBuffer()
 
-            val mesh = Mesh(
+            /*val triangle = Mesh(
                 floatArrayOf(
                     1.0f, 1.0f, 0.0f, // 0: top right
                     1.0f, -1.0f, 0.0f, // 1: bottom right
@@ -23,26 +23,26 @@ class PocketGLTest {
                     2, 0, 3
                 ).get(),
                 shaderProgram {
-                    shader {
+                    vertex {
                         source(PocketGLTest::class.java.getResource("/default.vert")!!.readText())
-                        type(ShaderType.VERTEX)
                     }
-                    shader {
+                    fragment {
                         source(PocketGLTest::class.java.getResource("/default.frag")!!.readText())
-                        type(ShaderType.FRAGMENT)
                     }
 
                     uniform(0, (3 * 16 * Float.SIZE_BYTES).toLong())
                 }
             )
-            val model = Model(listOf(mesh))
+            val model = Model(listOf(triangle))
             model.translate(0f, 0f, -1f)
-            model.scale(1.0f)
+            model.scale(1.0f)*/
+
+            val kindred = Model.from(PocketGLTest::class.java.getResourceAsStream("/Crystal.fbx")!!)
 
             val camera = Camera()
 
             val render = OpaqueRender()
-            render.render(Scene(listOf(model)), camera, Render.Projection.PERSPECTIVE)
+            render.render(Scene(kindred), camera, Render.Projection.PERSPECTIVE)
 
             val buffer = window.readBuffer()
             window.swapBuffers()
@@ -55,6 +55,9 @@ class PocketGLTest {
                 buffer,
                 window.channels * window.width
             )
+
+            //triangle.close()
+            kindred.meshes.forEach { it.close() }
         }
     }
 }

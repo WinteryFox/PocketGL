@@ -1,15 +1,25 @@
 package dev.amyfoxie
 
-import org.joml.Matrix4f
-import org.joml.Vector4f
-import org.lwjgl.BufferUtils
+import org.lwjgl.opengl.GL45.*
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
 
-fun Vector4f.get(): FloatBuffer = get(BufferUtils.createFloatBuffer(4))
+class Buffer : AutoCloseable {
+    private val buffer: Int = glGenBuffers()
 
-fun Matrix4f.get(): FloatBuffer = get(BufferUtils.createFloatBuffer(3 * 16))
+    fun bufferData(target: Int, data: FloatBuffer, usage: Int) {
+        glBufferData(target, data, usage)
+    }
 
-fun FloatArray.get(): FloatBuffer = BufferUtils.createFloatBuffer(size).put(this).rewind()
+    fun bufferData(target: Int, data: IntBuffer, usage: Int) {
+        glBufferData(target, data, usage)
+    }
 
-fun IntArray.get(): IntBuffer = BufferUtils.createIntBuffer(size).put(this).rewind()
+    fun bind(target: Int) {
+        glBindBuffer(target, buffer)
+    }
+
+    override fun close() {
+        glDeleteBuffers(buffer)
+    }
+}

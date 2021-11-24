@@ -27,13 +27,10 @@ enum class ShaderType(val type: Int) {
     FRAGMENT(GL_FRAGMENT_SHADER)
 }
 
-class ShaderBuilder {
-    private lateinit var type: ShaderType
+class ShaderBuilder(
+    private val type: ShaderType
+) {
     private lateinit var source: String
-
-    fun type(type: ShaderType) {
-        this.type = type
-    }
 
     fun source(source: String) {
         this.source = source
