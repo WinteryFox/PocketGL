@@ -28,6 +28,22 @@ sealed class Entity {
         position.add(translation)
     }
 
+    fun setRotationRadians(rotation: Vector3f) {
+        rotation.set(rotation)
+    }
+
+    fun setRotationRadians(x: Float, y: Float, z: Float) {
+        setRotationRadians(Vector3f(x, y, z))
+    }
+
+    fun setRotationDegrees(rotation: Vector3f) {
+        setRotationRadians(Math.toRadians(rotation.x), Math.toRadians(rotation.y), Math.toRadians(rotation.z))
+    }
+
+    fun setRotationDegrees(x: Float, y: Float, z: Float) {
+        setRotationDegrees(Vector3f(x, y, z))
+    }
+
     fun rotateDegrees(x: Float, y: Float, z: Float) {
         rotateRadians(Math.toRadians(x), Math.toRadians(y), Math.toRadians(z))
     }

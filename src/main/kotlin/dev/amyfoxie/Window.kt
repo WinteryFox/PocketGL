@@ -34,7 +34,7 @@ class Window(
         glfwWindowHint(GLFW_DECORATED, GLFW_FALSE)
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
 
-        window = glfwCreateWindow(width, height, "Hi", NULL, NULL)
+        window = glfwCreateWindow(width, height, "", NULL, NULL)
         if (window == NULL)
             error("Failed to create GLFW window")
 
